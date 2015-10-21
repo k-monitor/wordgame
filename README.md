@@ -1,4 +1,4 @@
-Szövegértés-fejlesztő e applikáció
+Szövegértés-fejlesztő applikáció
 
 Az ötletadó játék leírása:
 
