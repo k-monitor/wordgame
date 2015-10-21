@@ -1,12 +1,11 @@
-Szövegértés-fejlesztő Dobble applikáció
+Szövegértés-fejlesztő e applikáció
 
-Az eredeti Dobble leírása:
+Az ötletadó játék leírása:
 
-Pörgős, szórakoztató gondolkodási és észlelési képességet fejlesztő játék, melyben relációkat és azonosságokat kell felfedezni az 55 kerek lapon, melyek telis-tele vannak változatos, motiváló képekkel. /…/ A Dobble alapszabálya pofon egyszerű: az 55 lap közül bármely kettőt kiválasztva csak egyetlen azonos képet láthatunk. Vajon ki találja meg először? 
-http://www.gemklub.hu/jatek/64302/dobble_magyar
+Pörgős, szórakoztató gondolkodási és észlelési képességet fejlesztő játék, melyben relációkat és azonosságokat kell felfedezni az 55 kerek lapon, melyek telis-tele vannak változatos, motiváló képekkel. /…/ A játék alapszabálya pofon egyszerű: az 55 lap közül bármely kettőt kiválasztva csak egyetlen azonos képet láthatunk. Vajon ki találja meg először? 
 
-Szövegértés-fejlesztő Dobble:
-Az eredeti Dobble játék ábráit szavakra cserélve a játék egyrészt alkalmassá vált a szövegértés-fejlesztésére, másrészt személyre szabhatóan elkészíthetők, akár a szöveg tematikája, akár a fejlesztési terület szempontjából (pl. adott tanuló/osztály kedvenceit megjelenítve). Emellett a játék alkalmas szókincsfejlesztésre, valamint idegen nyelvek szavainak tanítására (a feltöltött szavaktól függően).
+Szövegértés-fejlesztő játék:
+Az eredeti játék ábráit szavakra cserélve a játék egyrészt alkalmassá vált a szövegértés-fejlesztésére, másrészt személyre szabhatóan elkészíthetők, akár a szöveg tematikája, akár a fejlesztési terület szempontjából (pl. adott tanuló/osztály kedvenceit megjelenítve). Emellett a játék alkalmas szókincsfejlesztésre, valamint idegen nyelvek szavainak tanítására (a feltöltött szavaktól függően).
 
 Applikáció fejlesztése:
 Egy olyan felületre van szükségünk, amely
@@ -17,5 +16,5 @@ Egy olyan felületre van szükségünk, amely
   * gépelés nélkül, a betöltött szöveg egyes szavaira kattintva kijelölhetők lesznek a kártyára kerülő szavak
   * továbblépés: online felületen egyedül játszható (egymás ellen, időre stb.)
 
-Cél: az alkalmazás segítségével egyedi játékok legyenek készíthetőek néhány perc alatt, az adott mentorált gyermek igényeihez, illetve a használt szöveghez/témához igazodva. A szöveg-alapú Dobble játék a toldi tanodások ötlete, így ezen ötlet kiválasztása esetén őket is meghívnánk a hackathonra, vagy eleve egy külön vegyes csapatot indítanánk a TanodaPlatform színeiben. 
+Cél: az alkalmazás segítségével egyedi játékok legyenek készíthetőek néhány perc alatt, az adott mentorált gyermek igényeihez, illetve a használt szöveghez/témához igazodva. A szöveg-alapú játék a toldi tanodások ötlete, így ezen ötlet kiválasztása esetén őket is meghívnánk a hackathonra, vagy eleve egy külön vegyes csapatot indítanánk a TanodaPlatform színeiben. 
 
