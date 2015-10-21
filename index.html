@@ -1,0 +1,221 @@
+<html>
+<head>
+<title>Szövegértés-fejlesztő Dobble applikáció v0.1</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="jqcloud.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="jqcloud-1.0.4.min.js"></script>
+<style>
+@media print {
+  * {-webkit-print-color-adjust:exact;}
+  .vezerlok {
+    display:none;
+  }
+}
+
+#nyomtatas {
+    margin-left: 150px;
+}
+#beallit {
+    display:none;
+}
+.kartya {
+  border: 1px solid black;
+  margin: 5px;
+  float: left;
+  width:300px;
+  height:300px;
+  position:relative;
+  padding:25px;
+}
+#szavak {
+  width:100%;
+  margin-bottom:20px;
+}
+.szo {
+  font-size: 22px;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+}
+#szoveg {
+  width:50%;
+  height:300px;
+}
+#cloud {
+  width: 48%;
+  height: 350px;
+  float: right;
+}
+
+span {
+  z-index:10;
+}
+.vezerlok {
+  position: relative;
+}
+.szo>div {
+  width: 100px;
+  pointer-events: all;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.rovid {
+  font-size: 28px;
+}
+.hosszu {
+  font-size: 18px;
+}
+
+</style>
+<script>
+$( document ).ready(function() {
+  $('#szavak').on('change',gen);
+  $('#szoveg').on('click', function() {
+        var text = $(this).html();
+        var start = $(this)[0].selectionStart;
+        var end = $(this)[0].selectionEnd;
+        var text = text.substr(start, end - start).replace(/[\,\. \;]/g,"").toLowerCase();
+        if (text.length > 2 && $('#szavak').val().indexOf(text) == -1) { 
+          $('#szavak').val($('#szavak').val().trim()+' '+text);
+          gen();
+        }
+    });
+  
+
+  $('#szoveg').on('change', function() {
+    var szavak = $('#szoveg').val().split(' ');
+    var word_array = [];
+    szavak.forEach(function(element, index, array) {
+      var szo = element.replace(/[\,\. \;]/g,"").toLowerCase();
+      if (szo.length<4) return;
+      if(typeof word_array[szo] !== 'undefined') word_array[szo]++;
+      else word_array[szo]=1;
+    });    
+
+    wordCloud = [];
+    for (var key in word_array) {
+      if (word_array.hasOwnProperty(key)) {
+        wordCloud.push({ text: key, weight: word_array[key] });
+      }
+    };
+    $("#cloud").empty().jQCloud(wordCloud);
+  });
+
+  $('#cloud').on('click','span',function() {
+    if ($('#szavak').val().indexOf($( this ).html()) > -1) return;
+    $('#szavak').val($('#szavak').val().trim()+' '+$( this ).html());
+    gen();
+  });
+
+  $('#szoveg').trigger('change');
+
+  $('#nyomtatas').on('click',function(){
+    window.print();
+    return false;   
+  });
+
+gen();
+function gen(){
+    var szavak = $('#szavak').val().split(' ');
+    var cardnum = Math.floor(szavak.length/4.5);
+    $('#kartyak').empty();
+    $('#beallit').css('display','none');
+    if (cardnum<2) return;
+    $('#beallit').css('display','block');
+    for (var i=0;i<cardnum;i++) {
+      $('#kartyak').append('<div class="kartya"></div>');
+    }
+
+    szavak.forEach(function (element, index) {
+      pos=randomize(-1);
+      var betumeret = '';
+      if (element.length < 7) betumeret = 'rovid';
+      if (element.length > 10) betumeret = 'hosszu';
+      if ($('.kartya:eq('+pos[0]+') .szo').length<9) $('.kartya:eq('+pos[0]+')').append('<div class="szo '+betumeret+'"><div>'+element+'</div></div>'); 
+      if ($('.kartya:eq('+pos[1]+') .szo').length<9) $('.kartya:eq('+pos[1]+')').append('<div class="szo '+betumeret+'"><div>'+element+'</div></div>'); 
+    });
+
+    for (k=0;k<$('.kartya').length;k++) {
+      for (var i=0;i<$('.kartya:eq('+k+') .szo').length;i++) {
+        var obj = $('.kartya:eq('+k+') .szo:eq('+i+')');
+        var angle = Math.floor(Math.random()*360);
+        obj.css({'transform': 'rotate('+angle+'deg)','top': 30*i,'left':50*i});
+        obj.attr('angle',angle); 
+     }
+    }
+
+    function randomize(elso) {
+      var tele=0;
+      for (i=0;i<cardnum;i++) {
+        var elemekSzama = $('.kartya:eq('+i+') .szo').length;
+        if(elemekSzama>tele) tele=elemekSzama;
+      }
+      var proba=0;
+      while (1) {
+        var masodik = Math.floor(Math.random()*cardnum);
+        if (masodik != elso && (tele > $('.kartya:eq('+masodik+') .szo').length || proba>100)) {
+          if (elso<0) { return new Array(masodik,randomize(masodik)); }
+          else return masodik;
+        }
+        proba++;
+      }    
+    }
+  };
+
+  $('#kartyak').on('click', '.szo>div',function() {
+    var obj = $(this).parent('.szo');
+    var angle = parseInt(obj.attr('angle'))+15;
+    obj.css({'transform': 'rotate('+angle+'deg)'});
+    obj.attr('angle',angle);
+  });
+
+});
+</script>
+</head>
+<body>
+<div class="vezerlok">
+<textarea id="szoveg">
+A Motiváció Műhely hátrányos helyzetűek, kiemelten gyermekek és fiatalok társadalmi beilleszkedését támogatja motiválás, képessé tevés és a társadalom érzékenyítése útján. A Motiváció Műhely keretein belül főként hátránykompenzáló és tehetséggondozó oktatási programok, társadalmi érzékenyítés, valamint az oktatási esélyegyenlőség témaköréhez illeszkedő kutatási és szakértői tevékenységek valósulnak meg három civilszervezet tagjainak az összefogásával.
+
+Motiváció Oktatási Egyesület
+Az Egyesületet azzal a céllal hozták létre egyetemi oktatók, esélyegyenlőségi szakemberek, pedagógusok és pedagógusjelöltek, hogy a magyar oktatási rendszer, illetve az oktatás során alkalmazott pedagógiai tartalmak, módszerek vizsgálatával és fejlesztésével elősegítsék a hazai oktatás megújítását, az oktatási minőség általános emelését és a méltányosság megvalósulását. A Motiváció Egyesület elsősorban a Motiváció Műhely oktatási programjainak megvalósításáért felel.
+
+Shero Egyesület
+Az Egyesület alapítói a Motiváció Hallgatói Mentorprogram mentorai és mentoráltjai közül kerültek ki. A Shero Egyesület aktívan részt vett a Hallgatói Mentorprogram, illetve a Motiváció Tanodák megvalósításában. A Motiváció Műhely keretében elsősorban ifjúsági és kulturális programok szervezését vállalja fel.
+
+Pontus Közhasznú Egyesület
+Az Egyesület roma és nem roma fiatalok elhatározásából jött létre annak érdekében, hogy olyan hidat építsen kultúrák és emberek között, amely hozzájárulhat az egyre mélyülő társadalmi leszakadás megállításához. A Pontus Egyesület a Motiváció Műhely keretében elsősorban integrációs programok megvalósításáért felel.
+Mi a Motiváció Műhelyben évek óta azon dolgozunk, hogy a szegregált oktatás okozta, szinte behozhatatlan hátrányok minél kevesebb gyermek életét tegyék tönkre Magyarországon. Mindig is tudtuk, hogy nincs könnyű dolgunk. A politikai környezet egyre kevésbé támogató az integrált oktatással szemben, ám ez soha nem vette el a kedvünket. Azt is tapasztaljuk nap mint nap, hogy a közvélemény általában nem érti, mit jelent az integráció, és gyakran pont azzal keverik össze, ami ellen mi is küzdünk: a szegregációval.
+
+Nagyon boldogok voltunk, amikor kiderült, a mi plakátunkat is kiállítják az ARC-on. Mindig is csodáltuk azokat a kreatív, mégis egyszerű alkotásokat, amelyek görbe tükröt állítanak társadalmunk vagy a politikai elit elé. Nem is gondoltuk, hogy milyen nehéz egyszerűen megfogalmazni saját üzenetünket. Hogyan írjuk le két mondatban azt, amivel mi már sok ezer órát foglalkoztunk? Lehetséges egyáltalán? Végül megszületett. Ez a baj, ezért dolgozunk minden nap: „Az ingyenes, minőségi oktatás mindenki* számára elérhető. (*Kivéve azokat, akiket kirekesztenek ebből. A szegregáció alacsony minőségű oktatáshoz vezet. Magyarországon a szegregált iskolák száma folyamatosan nő.)”
+Pár napja volt még csak kint a plakátunk, mikor megjelent rajta egy üzenet. Csakhogy az integrált oktatást ellenző komment egy szegregált iskolában szerzett tapasztalatokkal szerette volna alátámasztani igazát. Válaszként mi is kiragasztottuk üzenetünk. E párbeszéd látható a képeken.
+Meglepődve, de örömmel vettük észre, hogy vannak mások is, akik szintén szeretnék elmagyarázni polgártársaiknak, miről beszélünk: így hát kihasználva a nagy fehér felületet, ők is hagytak üzeneteket. Ki-ki a maga módján.
+
+Képzéseinket ajánljuk általános és középiskolás korú gyermekekkel, fiatalokkal foglalkozók, oktatási vagy szociális területen dolgozó szakemberek (pl. pedagógusok, mentorok, animátorok, közösségszervezők) szülők, pedagógusjelöltek és további segítő szakmát tanuló felsőoktatási hallgatók, valamint oktatással, jogérvényesítéssel, hátránykompenzálással foglalkozó civilszervezetek és állami intézmények munkatársai számára.
+
+A képzés célja, a résztvevők felkészítése 10–18 éves korú gyermekek és fiatalok olvasási motivációjának és olvasási teljesítményének emelésére. A képzés elméleti része az olvasás fejlődésével, jelentőségével, a motiváció néhány jelenségével, valamint ezek összefüggésével foglalkozik. Az elméleti alapozást követően az olvasás fejlesztésére alkalmas gyakorlatokat, játékokat ismerhetnek meg és próbálhatnak ki a résztvevők. A képzés közös gondolkodás és kooperatív munka által dolgozza fel azokat az ismereteket, amelyek az egyéni vagy kiscsoportos olvasásfejlesztő foglalkozások megvalósításához, valamint az olvasási motiváció erősítéséhez szükségesek. A képzésen résztvevők képesség válnak a tanulók fejlesztésére alkalmas szövegek és a kapcsolódó feladatsorok összeállítására.
+
+Rendszeresen lehetőséget biztosítunk fiataloknak, hogy önkéntesként bekapcsolódhassanak tevékenységeinkbe, ezáltal tapasztalatot gyűjthessenek hátrányos helyzetű tanulók oktatásában, fejlesztésében, valamint különböző programok szervezésében. A lehetőséget elsősorban segítő hivatásra készülő (pl. pedagógus, szociális munkás, pszichológus, kulturális mediátor, andragógus) felsőoktatási hallgatóknak ajánljuk, de mindenkit szívesen látunk. Így fiatalabbakat (középiskolásokat) és idősebbeket, valamint más pályákra készülőket vagy más területen tapasztalatokkal rendelkezőket is szívesen fogadunk.
+
+Nem csak gyermekek, fiatalok támogatása kapcsán várjuk önkéntesek jelentkezését. Számos további kompetencia (pl. kommunikáció és marketing, jog, rendezvényszervezés) hasznos lehet számunkra, illetve a felsoroltakon kívül az is segítséget jelenthet, ha rendszeresen vagy alkalmanként van néhány szabad órád, amit hasznosan töltenél el.
+
+Tapasztalataink szerint a segítő hivatásra készülő fiatalok az önkéntesség által megszerzett referenciákkal nagyobb eséllyel pályázhatnak meg bizonyos állásokat, illetve egyéb területeken is értékelik a munkáltatók az önkéntességet.
+
+Csatlakozásra általában a felsőoktatási félévek kezdetén van lehetőség, mivel azoknak az önkénteseknek, akik gyermekekkel, fiatalokkal szeretnének foglalkozni, részt kell venniük egy képzésen. A gyermekekkel, fiatalokkal foglalkozó önkéntesek egy tapasztalt pedagógus, mentor mellé csatlakozhatnak be.
+</textarea>
+<div id="cloud"></div>
+<input id="szavak" type="text">
+<div id="beallit">
+  <button id="nyomtatas">Nyomtatás</button>
+</div>
+</div>
+<div id="kartyak"></div>
+</body>
+</html>
